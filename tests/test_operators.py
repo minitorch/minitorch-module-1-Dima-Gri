@@ -1,5 +1,6 @@
 from typing import Callable, List, Tuple
 
+import numpy as np
 import pytest
 from hypothesis import given
 from hypothesis.strategies import lists
@@ -107,14 +108,18 @@ def test_sigmoid(a: float) -> None:
     * It crosses 0 at 0.5
     * It is  strictly increasing.
     """
-    raise NotImplementedError("Need to include this file from past assignment.")
+    assert 0.0 <= sigmoid(a) <= 1.0
+    assert_close(1 - sigmoid(a), sigmoid(neg(a)))
+    assert sigmoid(0) == 0.5
+    assert sigmoid(a) <= sigmoid(a + 1e-3) <= sigmoid(a + 1.0)
 
 
 @pytest.mark.task0_2
 @given(small_floats, small_floats, small_floats)
 def test_transitive(a: float, b: float, c: float) -> None:
     "Test the transitive property of less-than (a < b and b < c implies a < c)"
-    raise NotImplementedError("Need to include this file from past assignment.")
+    # implement (a => b) <=> not(a) or b
+    assert not (lt(a, b) and lt(b, c)) or lt(a, c)
 
 
 @pytest.mark.task0_2
@@ -123,7 +128,8 @@ def test_symmetric() -> None:
     Write a test that ensures that :func:`minitorch.operators.mul` is symmetric, i.e.
     gives the same value regardless of the order of its input.
     """
-    raise NotImplementedError("Need to include this file from past assignment.")
+    a, b = np.random.random(), np.random.random()
+    assert eq(mul(a, b), mul(b, a))
 
 
 @pytest.mark.task0_2
@@ -132,7 +138,8 @@ def test_distribute() -> None:
     Write a test that ensures that your operators distribute, i.e.
     :math:`z \times (x + y) = z \times x + z \times y`
     """
-    raise NotImplementedError("Need to include this file from past assignment.")
+    a, b, z = np.random.random(), np.random.random(), np.random.random()
+    assert_close(mul(z, add(a, b)), add(mul(z, a), mul(z, b)))
 
 
 @pytest.mark.task0_2
@@ -140,7 +147,8 @@ def test_other() -> None:
     """
     Write a test that ensures some other property holds for your functions.
     """
-    raise NotImplementedError("Need to include this file from past assignment.")
+    a = np.random.random()
+    assert_close(inv(inv(a)), a)
 
 
 # ## Task 0.3  - Higher-order functions
@@ -168,7 +176,7 @@ def test_sum_distribute(ls1: List[float], ls2: List[float]) -> None:
     Write a test that ensures that the sum of `ls1` plus the sum of `ls2`
     is the same as the sum of each element of `ls1` plus each element of `ls2`.
     """
-    raise NotImplementedError("Need to include this file from past assignment.")
+    assert_close(sum(ls1) + sum(ls2), sum(addLists(ls1, ls2)))
 
 
 @pytest.mark.task0_3
